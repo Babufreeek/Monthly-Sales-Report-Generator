@@ -161,7 +161,7 @@ def total_sales(
 
 def parse_translations(file_path="Language Translation.xlsx"):
     """
-    Read translations spreadsheet into a dictionary.
+    Read translations spreadsheet into a dictionary
 
     Each worksheet's name is a key to a dictionary where the Chinese phrases are mapped to the English translation
     """
