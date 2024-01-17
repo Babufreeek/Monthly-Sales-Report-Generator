@@ -13,6 +13,9 @@ def total_sales(
     new_filename="Result.xlsx",
     new_worksheet="Sheet1",
 ):
+    """
+    Calculate total sales from the inputted spreadsheet
+    """
     # Function to calculate hourly and postpaid sales
     def hourly_and_postpaid_sales(sales_df):
         """
@@ -158,7 +161,9 @@ def total_sales(
 
 def parse_translations(file_path="Language Translation.xlsx"):
     """
-    Read translations into a dictionary
+    Read translations spreadsheet into a dictionary.
+
+    Each worksheet's name is a key to a dictionary where the Chinese phrases are mapped to the English translation
     """
     spreadsheet = pd.ExcelFile(file_path)
 
