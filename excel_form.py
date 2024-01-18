@@ -2,6 +2,7 @@ import sys
 import openpyxl
 import os
 from monthly_sales_calculations import total_sales
+import styles
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QComboBox, QCheckBox, QMessageBox
 
 class ExcelForm(QWidget):
@@ -11,6 +12,12 @@ class ExcelForm(QWidget):
         self.initUI()
 
     def initUI(self):
+        # Set default width and height of window
+        self.resize(styles.width, styles.height)
+
+        # Set default font size and dimensions of buttons and text
+        self.setStyleSheet(styles.style_sheet)
+
         # Select Excel File
         self.excel_file_label = QLabel('Select Excel File:')
         self.excel_file_edit = QLineEdit()
@@ -56,7 +63,7 @@ class ExcelForm(QWidget):
         self.output_location_edit = QLineEdit()
         self.output_location_edit.setEnabled(True)
 
-        self.browse_location_button = QPushButton('Browse Location')
+        self.browse_location_button = QPushButton('Browse')
         self.browse_location_button.setEnabled(True)
         self.browse_location_button.clicked.connect(self.get_output_location)
 
@@ -106,6 +113,7 @@ class ExcelForm(QWidget):
         layout.addWidget(self.submit_button)
 
         self.setLayout(layout)
+        
 
     def get_excel_file(self):
         file_dialog = QFileDialog()
