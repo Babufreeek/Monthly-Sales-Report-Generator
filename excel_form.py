@@ -151,11 +151,15 @@ class ExcelForm(QWidget):
     def load_worksheets(self, excel_file):
         self.worksheet_combo.clear()
 
+        print("Loading worksheets...")
+
         try:
             workbook = openpyxl.load_workbook(excel_file, read_only=True)
             self.worksheet_combo.addItems(workbook.sheetnames)
         except Exception as e:
             print(f"Error loading worksheets: {e}")
+
+        print("Worksheets loaded!")
 
     def toggle_add_to_existing(self, state):
         self.worksheet_to_add_edit.setEnabled(state == 2)  # 2 is checked, 0 is unchecked
@@ -204,6 +208,8 @@ class ExcelForm(QWidget):
             self.show_message("Missing Fields", "If 'Add to Existing Spreadsheet' is checked, 'Worksheet to Add' field cannot be blank.")
             return
 
+        print("Processing files...")
+
         # Use the values to calculate total sales
         total_sales(
             file_path=excel_file,
@@ -216,6 +222,8 @@ class ExcelForm(QWidget):
             new_filename=os.path.join(output_location, new_filename),
             new_worksheet=new_worksheet_name,
         )
+
+        print("Finished processing!")
 
         # Show a message after processing files
         self.show_processed_message()
