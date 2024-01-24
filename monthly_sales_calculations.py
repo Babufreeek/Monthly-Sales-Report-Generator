@@ -3,17 +3,17 @@ import openpyxl
 
 
 def total_sales(
-    file_path,
-    sheet_name,
-    translation_sheet="Language Translation.xlsx",
-    already_translated=False,
-    output_translations=False,
+    file_path, # File path of input
+    sheet_name, # Worksheet to process
+    translation_sheet="Language Translation.xlsx", # Translation Source
+    already_translated=False, # Check if worksheet is already translated
+    output_translations=False, # Output translation as a new worksheet
     translate_only=False, # Translate file only
-    add_to=False,
-    worksheet_to_add="Monthly Sales Calculation",
-    create_new_spreadsheet=True,
-    new_filename="Result.xlsx",
-    new_worksheet="Sheet1",
+    add_to=False, # Add a worksheet containing the filtered data
+    worksheet_to_add="Monthly Sales Calculation", # Name of new worksheet
+    create_new_spreadsheet=True, # Output data into a new spreadsheet instead
+    new_filename="Result.xlsx", # Filepath for new spreadsheet
+    new_worksheet="Sheet1", # Name of worksheet in the new spreadsheet
 ):
     """
     Calculate total sales from the inputted spreadsheet
