@@ -41,14 +41,16 @@ class ExcelForm(QWidget):
         self.already_translated_checkbox.stateChanged.connect(self.toggle_already_translated)
 
         # Option to save translated table as a new worksheet in the existing file
-        self.save_translations_checkbox = QCheckBox('Save Translations')
+        self.save_translations_checkbox = QCheckBox('Save Translation Output')
 
         # Option to just translate the worksheet without needing to process the data further
         self.translate_only_checkbox = QCheckBox('Translate Only')
         self.translate_only_checkbox.stateChanged.connect(self.toggle_translate_only)
 
+        self.output_method_label = QLabel('Select Output Method Below:')
+
         # Option to add the data into the existing spreadsheet
-        self.add_to_existing_checkbox = QCheckBox('Add to Existing Spreadsheet')
+        self.add_to_existing_checkbox = QCheckBox('Add as Existing Spreadsheet')
         self.add_to_existing_checkbox.stateChanged.connect(self.toggle_add_to_existing)
 
         # Name of new worksheet to be added
@@ -102,8 +104,10 @@ class ExcelForm(QWidget):
         layout.addWidget(self.already_translated_checkbox)
         layout.addWidget(self.save_translations_checkbox)
         layout.addWidget(self.translate_only_checkbox)
-        layout.addWidget(self.add_to_existing_checkbox)
 
+        layout.addWidget(self.output_method_label)
+
+        layout.addWidget(self.add_to_existing_checkbox)
         layout.addWidget(self.worksheet_to_add_label)
         layout.addWidget(self.worksheet_to_add_edit)
 
@@ -263,7 +267,7 @@ class ExcelForm(QWidget):
 
         print("Processing files...")
 
-        # Use the values to calculate total sales
+         # Use the values to calculate total sales
         total_sales(
             file_path=excel_file,
             sheet_name=worksheet_name,
@@ -304,10 +308,21 @@ class ExcelForm(QWidget):
         self.excel_file_edit.clear()
         self.worksheet_combo.clear()
         self.translation_source_edit.clear()
+
+        self.already_translated_checkbox.setChecked(False)
+
+        self.save_translations_checkbox.setEnabled(True)
         self.save_translations_checkbox.setChecked(False)
+
+        self.translate_only_checkbox.setEnabled(True)
+        self.translate_only_checkbox.setChecked(False)
+
+        self.add_to_existing_checkbox.setEnabled(True)
         self.add_to_existing_checkbox.setChecked(False)
         self.worksheet_to_add_edit.clear()
         self.worksheet_to_add_edit.setEnabled(False)
+        
+        self.create_new_spreadsheet_checkbox.setEnabled(True) 
         self.create_new_spreadsheet_checkbox.setChecked(True)  # Set back to default state
         self.new_filename_edit.clear()
         self.output_location_edit.clear()
