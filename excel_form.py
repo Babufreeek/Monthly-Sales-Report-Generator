@@ -232,7 +232,10 @@ class ExcelForm(QWidget):
         worksheet_name = self.worksheet_combo.currentText()
         translation_source = self.translation_source_edit.text()
 
+        already_translated = self.already_translated_checkbox.isChecked()
         save_translations = self.save_translations_checkbox.isChecked()
+        translate_only = self.translate_only_checkbox.isChecked()
+
         add_to_existing = self.add_to_existing_checkbox.isChecked()
         worksheet_to_add = self.worksheet_to_add_edit.text() if add_to_existing else None
 
@@ -246,7 +249,7 @@ class ExcelForm(QWidget):
             self.show_message("Missing Fields", "Excel file, worksheet, and translation file fields cannot be blank.")
             return
 
-        if not add_to_existing and not create_new_spreadsheet:
+        if not add_to_existing and not create_new_spreadsheet and not translate_only:
             self.show_message("Missing Fields", "Either 'Add to Existing Spreadsheet' or 'Create New Spreadsheet' must be checked.")
             return
 
@@ -265,7 +268,9 @@ class ExcelForm(QWidget):
             file_path=excel_file,
             sheet_name=worksheet_name,
             translation_sheet=translation_source,
+            already_translated=already_translated,
             output_translations=save_translations,
+            translate_only=translate_only,
             add_to=add_to_existing,
             worksheet_to_add=worksheet_to_add,
             create_new_spreadsheet=create_new_spreadsheet,
