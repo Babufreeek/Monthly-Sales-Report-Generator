@@ -6,7 +6,9 @@ def total_sales(
     file_path,
     sheet_name,
     translation_sheet="Language Translation.xlsx",
+    already_translated=False,
     output_translations=False,
+    translate_only=False, # Translate file only
     add_to=False,
     worksheet_to_add="Monthly Sales Calculation",
     create_new_spreadsheet=True,
@@ -123,9 +125,17 @@ def total_sales(
     delete_refund = translations["订单类型"]["删除退费"]
     monthly = translations["计费类型"]["按月"]
 
-    sales_df = translate_spreadsheet_data(
-        file_path, sheet_name, translations, output_translations
-    )
+    # If file is not already translated, translate the worksheet data first
+    if not already_translated:
+        sales_df = translate_spreadsheet_data(
+            file_path, sheet_name, translations, output_translations
+        )
+        # If user only wants to translate the worksheet, return and exit out of program
+        if translate_only:
+            return
+    # If file has already been translated, directlt
+    else:
+        sales_df = pd.read_excel(file_path, sheet_name)
 
     # Calculate hourly and postpaid sales
     output = hourly_and_postpaid_sales(sales_df)
