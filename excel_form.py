@@ -278,7 +278,7 @@ class ExcelForm(QWidget):
             add_to=add_to_existing,
             worksheet_to_add=worksheet_to_add,
             create_new_spreadsheet=create_new_spreadsheet,
-            new_filename=os.path.join(output_location, new_filename),
+            new_filename=os.path.join(output_location, new_filename) if new_filename else "",
             new_worksheet=new_worksheet_name,
         )
 
