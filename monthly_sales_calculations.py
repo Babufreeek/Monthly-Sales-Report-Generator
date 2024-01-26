@@ -109,21 +109,69 @@ def total_sales(
         ).round(2)
 
         return final_df
-    
+
+    def translator(column_name=None, value_name=None):
+        """
+        Try to get translations needed for calculations using preset values
+        Else prompt user to input the correct name
+        """
+        # Searching for column only
+        if column_name and not value_name:
+            try:
+                return translations["Header"][column_name]
+            # User to manually input column name in case of error
+            except KeyError:
+                # Get input for
+                new_column_name = input(f"New column name for {column_name}: ")
+                return translations["Header"][new_column_name]
+        # Searching for a value in a particular column
+        else:
+            try:
+                return translations[column_name][value_name]
+            # User to manually input column and value name in case of error
+            except KeyError:
+                new_column_name = input(f"New column name for {column_name}: ")
+                new_value_name = input(f"New value name for {value_name}: ")
+                return translations[new_column_name][new_value_name]
+
     # Get translations for spreadsheet
     translations = parse_translations(translation_sheet)
 
     # Variables needed for calculations
-    headers = translations["Header"]
-    billing_method = headers["计费类型"]
-    resource_id = headers["资源ID"]
-    order_type = headers["订单类型"]
-    order_start_time = headers["订单起始时间"]
-    order_end_time = headers["订单结束时间"]
-    usage_total = headers["消费原价"]
-    unit_price = headers["订单原价"]
-    delete_refund = translations["订单类型"]["删除退费"]
-    monthly = translations["计费类型"]["按月"]
+    # Column names needed for calculations
+    untranslated_column_names = [
+        "项目", # Project ID
+        "资源ID", # Resource ID
+        "标识", # Resource Name
+        "资源类型", # Resource Type
+        "数据中心", # Region
+        "计费类型", # Billing Method
+        "配置", # Configuration
+        "订单类型", # Order Type
+        "订单起始时间", # Order Start Time
+        "订单结束时间", # Order End Time
+        "订单原价", # Unit Price, 
+        "消费原价", # Usage Amount
+    ]
+    # Get the translated values we need using the translator
+    (
+        project_id,
+        resource_id,
+        resource_name,
+        resource_type,
+        region,
+        billing_method,
+        configuration,
+        order_type,
+        order_start_time,
+        order_end_time,
+        unit_price,
+        usage_total,
+    ) = [translator(column_name=col) for col in untranslated_column_names]
+    
+    # Get translated value names needed for our calculations
+    delete_refund = translator(column_name="订单类型", value_name="删除退费")
+    monthly = translator(column_name="计费类型", value_name="按月")
 
     # If file is not already translated, translate the worksheet data first
     if not already_translated:
@@ -143,13 +191,13 @@ def total_sales(
     # Reorganize columns and exclude columns not required for our final output
     output = output[
         [
-            headers["项目"],  # Project ID
+            project_id,
             resource_id,
-            headers["标识"],  # Resource Name
-            headers["资源类型"],  # Resource Type
-            headers["数据中心"],  # Region
+            resource_name,
+            resource_type,
+            region,
             billing_method,
-            headers["配置"],  # Configuration
+            configuration,
             order_start_time,
             order_end_time,
             "Duration (Hours)",
@@ -219,3 +267,4 @@ def translate_spreadsheet_data(
             )
 
     return untranslated_df
+
