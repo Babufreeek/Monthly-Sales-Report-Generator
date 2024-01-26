@@ -12,6 +12,43 @@
 - A pop-up/command-line message will be displayed once the files have been processed. 
 - Click the "Ok" button if you would like to process any other files.
 
+## Alternative Usage
+- If you would like to translate the content only and exit, Click the `Translate Worksheet Only` checkbox. Then click submit.
+- If the worksheet has already been translated according to the guidelines, you can check the `Worksheet Already Translated` checkbox.
+
+## **Chinese Translations 
+- Listed at the top of `monthly_sales_calculations.py` are the preset chinese characters for variables that we need to use in our calculations.
+- If any of the Chinese phrases below has been changed, make sure to update the preset values in `monthly_sales_calculations.py` as well before running the program.
+- Alternatively, if you run the program without updating the preset values, you will be prompted to key in the updated column/value name in the terminal for those values that have changed.
+
+### Preset Chinese Characters
+```
+untranslated_column_names = [
+    "项目", # Project ID
+    "资源ID", # Resource ID
+    "标识", # Resource Name
+    "资源类型", # Resource Type
+    "数据中心", # Region
+    "计费类型", # Billing Method
+    "配置", # Configuration
+    "订单类型", # Order Type
+    "订单起始时间", # Order Start Time
+    "订单结束时间", # Order End Time
+    "订单原价", # Unit Price, 
+    "消费原价", # Usage Amount
+]
+
+# Preset column values for calculations
+monthly_chinese = (
+    untranslated_column_names[5], # Billing Type
+    "按月" # Monthly
+ )
+delete_refund_chinese = (
+    untranslated_column_names[7], # Order Type
+    "删除退费" # Delete & Refund
+)
+```
+
 ## Running via Command Line Interface
 ---------------
 
