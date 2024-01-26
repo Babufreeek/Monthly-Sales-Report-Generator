@@ -1,6 +1,33 @@
 import pandas as pd
 import openpyxl
 
+# Preset column names needed for calculations
+untranslated_column_names = [
+    "项目", # Project ID
+    "资源ID", # Resource ID
+    "标识", # Resource Name
+    "资源类型", # Resource Type
+    "数据中心", # Region
+    "计费类型", # Billing Method
+    "配置", # Configuration
+    "订单类型", # Order Type
+    "订单起始时间", # Order Start Time
+    "订单结束时间", # Order End Time
+    "订单原价", # Unit Price, 
+    "消费原价", # Usage Amount
+]
+
+# Preset column values for calculations
+monthly_chinese = (
+    untranslated_column_names[5], # Billing Type
+    "按月" # Monthly
+ )
+delete_refund_chinese = (
+    untranslated_column_names[7], # Order Type
+    "删除退费" # Delete & Refund
+)
+
+# Values need for calculations
 
 def total_sales(
     file_path, # File path of input
@@ -130,29 +157,13 @@ def total_sales(
                 return translations[column_name][value_name]
             # User to manually input column and value name in case of error
             except KeyError:
-                new_column_name = input(f"New column name for {column_name}: ")
                 new_value_name = input(f"New value name for {value_name}: ")
-                return translations[new_column_name][new_value_name]
+                return translations[column_name][new_value_name]
 
     # Get translations for spreadsheet
     translations = parse_translations(translation_sheet)
 
     # Variables needed for calculations
-    # Column names needed for calculations
-    untranslated_column_names = [
-        "项目", # Project ID
-        "资源ID", # Resource ID
-        "标识", # Resource Name
-        "资源类型", # Resource Type
-        "数据中心", # Region
-        "计费类型", # Billing Method
-        "配置", # Configuration
-        "订单类型", # Order Type
-        "订单起始时间", # Order Start Time
-        "订单结束时间", # Order End Time
-        "订单原价", # Unit Price, 
-        "消费原价", # Usage Amount
-    ]
     # Get the translated values we need using the translator
     (
         project_id,
@@ -168,10 +179,10 @@ def total_sales(
         unit_price,
         usage_total,
     ) = [translator(column_name=col) for col in untranslated_column_names]
-    
+
     # Get translated value names needed for our calculations
-    delete_refund = translator(column_name="订单类型", value_name="删除退费")
-    monthly = translator(column_name="计费类型", value_name="按月")
+    monthly = translator(column_name=monthly_chinese[0], value_name=monthly_chinese[1])
+    delete_refund = translator(column_name=delete_refund_chinese[0], value_name=delete_refund_chinese[1])
 
     # If file is not already translated, translate the worksheet data first
     if not already_translated:
