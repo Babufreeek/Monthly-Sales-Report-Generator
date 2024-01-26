@@ -1,5 +1,5 @@
 # Window size
-width, height = 1200, 800
+width, height = 1200, 900
 
 # Stylings
 style_sheet = """
