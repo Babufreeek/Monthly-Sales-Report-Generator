@@ -2,7 +2,7 @@ import pandas as pd
 import openpyxl
 
 # Preset column names needed for calculations
-untranslated_column_names = [
+UNTRANSLATED_COLUMN_NAMES = [
     "项目", # Project ID
     "资源ID", # Resource ID
     "标识", # Resource Name
@@ -18,14 +18,14 @@ untranslated_column_names = [
 ]
 
 # Preset column values for calculations
-monthly_chinese = (
-    untranslated_column_names[5], # Billing Type
+MONTHLY_CHINESE = [
+    UNTRANSLATED_COLUMN_NAMES[5], # Billing Type
     "按月" # Monthly
- )
-delete_refund_chinese = (
-    untranslated_column_names[7], # Order Type
+]
+DELETE_REFUND_CHINESE = [
+    UNTRANSLATED_COLUMN_NAMES[7], # Order Type
     "删除退费" # Delete & Refund
-)
+]
 
 # Values need for calculations
 
@@ -150,6 +150,15 @@ def total_sales(
             except KeyError:
                 # Get input for
                 new_column_name = input(f"New column name for {column_name}: ")
+                
+                # Update global variables for values if needed
+                global MONTHLY_CHINESE
+                global DELETE_REFUND_CHINESE
+                if column_name in MONTHLY_CHINESE:
+                    MONTHLY_CHINESE[0] = new_column_name
+                elif column_name in DELETE_REFUND_CHINESE:
+                    DELETE_REFUND_CHINESE[0] = new_column_name
+
                 return translations["Header"][new_column_name]
         # Searching for a value in a particular column
         else:
@@ -178,11 +187,11 @@ def total_sales(
         order_end_time,
         unit_price,
         usage_total,
-    ) = [translator(column_name=col) for col in untranslated_column_names]
+    ) = [translator(column_name=col) for col in UNTRANSLATED_COLUMN_NAMES]
 
     # Get translated value names needed for our calculations
-    monthly = translator(column_name=monthly_chinese[0], value_name=monthly_chinese[1])
-    delete_refund = translator(column_name=delete_refund_chinese[0], value_name=delete_refund_chinese[1])
+    monthly = translator(column_name=MONTHLY_CHINESE[0], value_name=MONTHLY_CHINESE[1])
+    delete_refund = translator(column_name=DELETE_REFUND_CHINESE[0], value_name=DELETE_REFUND_CHINESE[1])
 
     # If file is not already translated, translate the worksheet data first
     if not already_translated:
