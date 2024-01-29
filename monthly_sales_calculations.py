@@ -18,14 +18,9 @@ UNTRANSLATED_COLUMN_NAMES = [
 ]
 
 # Preset column values for calculations
-MONTHLY_CHINESE = [
-    UNTRANSLATED_COLUMN_NAMES[5], # Billing Type
-    "按月" # Monthly
-]
-DELETE_REFUND_CHINESE = [
-    UNTRANSLATED_COLUMN_NAMES[7], # Order Type
-    "删除退费" # Delete & Refund
-]
+MONTHLY_CHINESE = "按月" # Monthly
+DELETE_REFUND_CHINESE = "删除退费" # Delete & Refund
+
 
 # Values need for calculations
 
@@ -151,13 +146,11 @@ def total_sales(
                 # Get input for
                 new_column_name = input(f"New column name for {column_name}: ")
                 
-                # Update global variables for values if needed
-                global MONTHLY_CHINESE
-                global DELETE_REFUND_CHINESE
-                if column_name in MONTHLY_CHINESE:
-                    MONTHLY_CHINESE[0] = new_column_name
-                elif column_name in DELETE_REFUND_CHINESE:
-                    DELETE_REFUND_CHINESE[0] = new_column_name
+                # Update global variables for values if needed (To get translation for monthly/delete & refund)
+                global UNTRANSLATED_COLUMN_NAMES
+                position = UNTRANSLATED_COLUMN_NAMES.index(column_name)
+                if position in [5, 7]:
+                    UNTRANSLATED_COLUMN_NAMES[position] = new_column_name
 
                 return translations["Header"][new_column_name]
         # Searching for a value in a particular column
@@ -190,8 +183,8 @@ def total_sales(
     ) = [translator(column_name=col) for col in UNTRANSLATED_COLUMN_NAMES]
 
     # Get translated value names needed for our calculations
-    monthly = translator(column_name=MONTHLY_CHINESE[0], value_name=MONTHLY_CHINESE[1])
-    delete_refund = translator(column_name=DELETE_REFUND_CHINESE[0], value_name=DELETE_REFUND_CHINESE[1])
+    monthly = translator(column_name=UNTRANSLATED_COLUMN_NAMES[5], value_name=MONTHLY_CHINESE)
+    delete_refund = translator(column_name=UNTRANSLATED_COLUMN_NAMES[7], value_name=DELETE_REFUND_CHINESE)
 
     # If file is not already translated, translate the worksheet data first
     if not already_translated:
