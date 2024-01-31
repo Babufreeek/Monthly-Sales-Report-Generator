@@ -149,8 +149,7 @@ def total_sales(
                 # Update global variables for values if needed (To get translation for monthly/delete & refund)
                 global UNTRANSLATED_COLUMN_NAMES
                 position = UNTRANSLATED_COLUMN_NAMES.index(column_name)
-                if position in [5, 7]:
-                    UNTRANSLATED_COLUMN_NAMES[position] = new_column_name
+                UNTRANSLATED_COLUMN_NAMES[position] = new_column_name
 
                 return translations["Header"][new_column_name]
         # Searching for a value in a particular column
@@ -194,7 +193,7 @@ def total_sales(
         # If user only wants to translate the worksheet, return and exit out of program
         if translate_only:
             return
-    # If file has already been translated, directlt
+    # If file has already been translated, directly read it
     else:
         sales_df = pd.read_excel(file_path, sheet_name)
 
@@ -252,7 +251,7 @@ def translate_spreadsheet_data(
     file_path, sheet_name, translations, output_translations=False
 ):
     """
-    Takes in a spreadsheet file and a worksheet name, then using a translation guidline, translate the values in the rows and columns.
+    Takes in a spreadsheet file and a worksheet name, then using a translation guide, translate the values in the rows and columns.
 
     User can output the data into the worksheet using `output_translations`
     """
@@ -264,9 +263,9 @@ def translate_spreadsheet_data(
         translations = parse_translations()
 
     # Replace column values with their english translation
-    cols = list(translations.keys())
-    cols.remove("Header")
-    for col in cols:
+    cols_to_translate = [t for t in translations]
+    cols_to_translate.remove("Header")
+    for col in cols_to_translate:
         untranslated_df[col].replace(translations[col], inplace=True)
 
     # Rename header titles
