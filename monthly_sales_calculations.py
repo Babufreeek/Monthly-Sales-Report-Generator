@@ -1,29 +1,6 @@
 import pandas as pd
 import openpyxl
 
-# Preset column names needed for calculations
-UNTRANSLATED_COLUMN_NAMES = [
-    "项目", # Project ID
-    "资源ID", # Resource ID
-    "标识", # Resource Name
-    "资源类型", # Resource Type
-    "数据中心", # Region
-    "计费类型", # Billing Method
-    "配置", # Configuration
-    "订单类型", # Order Type
-    "订单起始时间", # Order Start Time
-    "订单结束时间", # Order End Time
-    "订单原价", # Unit Price, 
-    "消费原价", # Usage Amount
-]
-
-# Preset column values for calculations
-MONTHLY_CHINESE = "按月" # Monthly
-DELETE_REFUND_CHINESE = "删除退费" # Delete & Refund
-
-
-# Values need for calculations
-
 def total_sales(
     file_path, # File path of input
     sheet_name, # Worksheet to process
@@ -106,84 +83,34 @@ def total_sales(
         merged_df['Duration (Hours)'] = merged_df['Duration (Hours)'].round(2)
 
         # Get usage amount by summing up the hourly charges for each Resource ID
-        usage_amount = (
-            hourly_and_postpaid_df.groupby(resource_id)[usage_total].sum().reset_index()
+        usage_total = (
+            hourly_and_postpaid_df.groupby(resource_id)[usage_amount].sum().reset_index()
         )
 
         # Merge total usage amount dataframe
         final_df = pd.merge(
             merged_df,
-            usage_amount,
+            usage_total,
             on=resource_id,
             how="left",
             suffixes=("_hourly", "_total"),
         )
 
         # Rename columns back to normal
-        final_df = final_df.rename(columns={usage_total + "_total": usage_total})
+        final_df = final_df.rename(columns={usage_amount + "_total": usage_amount})
 
         # Drop hourly usage column (there is already a column for unit price)
-        final_df = final_df.drop([usage_total + "_hourly"], axis=1)
+        final_df = final_df.drop([usage_amount + "_hourly"], axis=1)
 
         # Get average Unit Price by dividing Usage Amount by duration
         final_df[unit_price] = (
-            final_df[usage_total] / final_df["Duration (Hours)"]
+            final_df[usage_amount] / final_df["Duration (Hours)"]
         ).round(2)
 
         return final_df
-
-    def translator(column_name=None, value_name=None):
-        """
-        Try to get translations needed for calculations using preset values
-        Else prompt user to input the correct name
-        """
-        # Searching for column only
-        if column_name and not value_name:
-            try:
-                return translations["Header"][column_name]
-            # User to manually input column name in case of error
-            except KeyError:
-                # Get input for
-                new_column_name = input(f"New column name for {column_name}: ")
-                
-                # Update global variables for values if needed (To get translation for monthly/delete & refund)
-                global UNTRANSLATED_COLUMN_NAMES
-                position = UNTRANSLATED_COLUMN_NAMES.index(column_name)
-                UNTRANSLATED_COLUMN_NAMES[position] = new_column_name
-
-                return translations["Header"][new_column_name]
-        # Searching for a value in a particular column
-        else:
-            try:
-                return translations[column_name][value_name]
-            # User to manually input column and value name in case of error
-            except KeyError:
-                new_value_name = input(f"New value name for {value_name}: ")
-                return translations[column_name][new_value_name]
-
-    # Get translations for spreadsheet
+    
+    # Get translations guidelines
     translations = parse_translations(translation_sheet)
-
-    # Variables needed for calculations
-    # Get the translated values we need using the translator
-    (
-        project_id,
-        resource_id,
-        resource_name,
-        resource_type,
-        region,
-        billing_method,
-        configuration,
-        order_type,
-        order_start_time,
-        order_end_time,
-        unit_price,
-        usage_total,
-    ) = [translator(column_name=col) for col in UNTRANSLATED_COLUMN_NAMES]
-
-    # Get translated value names needed for our calculations
-    monthly = translator(column_name=UNTRANSLATED_COLUMN_NAMES[5], value_name=MONTHLY_CHINESE)
-    delete_refund = translator(column_name=UNTRANSLATED_COLUMN_NAMES[7], value_name=DELETE_REFUND_CHINESE)
 
     # If file is not already translated, translate the worksheet data first
     if not already_translated:
@@ -196,6 +123,32 @@ def total_sales(
     # If file has already been translated, directly read it
     else:
         sales_df = pd.read_excel(file_path, sheet_name)
+
+    # Variables needed for calculations
+    untranslated_values = translations["IMPT VARS - DO NOT DELETE"]
+
+    # Get english name for the particular columns
+    (
+        project_id,
+        resource_id,
+        resource_name,
+        resource_type,
+        region,
+        billing_method,
+        configuration,
+        order_type,
+        order_start_time,
+        order_end_time,
+        unit_price,
+        usage_amount,
+    ) = [
+        translations["Header"][var] 
+        for var in list(untranslated_values.values())[:-2]
+        ]
+
+    # Get english value names needed for values within columns
+    monthly = translations[untranslated_values["Billing Method"]][untranslated_values["Monthly"]]
+    delete_refund = translations[untranslated_values["Order Type"]][untranslated_values["Delete & Refund"]]
 
     # Calculate hourly and postpaid sales
     output = hourly_and_postpaid_sales(sales_df)
@@ -214,7 +167,7 @@ def total_sales(
             order_end_time,
             "Duration (Hours)",
             unit_price,
-            usage_total,
+            usage_amount,
         ]
     ]
 
@@ -258,15 +211,18 @@ def translate_spreadsheet_data(
     # Open sheet to translate
     untranslated_df = pd.read_excel(file_path, sheet_name=sheet_name)
 
-    # Get translations if guidelines are not provided
-    if not translations:
-        translations = parse_translations()
-
     # Replace column values with their english translation
-    cols_to_translate = [t for t in translations]
-    cols_to_translate.remove("Header")
+    cols_to_translate = [
+        worksheet 
+        for worksheet in translations 
+        if worksheet not in ["IMPT VARS - DO NOT DELETE", "Header"]
+        ]
+
     for col in cols_to_translate:
-        untranslated_df[col].replace(translations[col], inplace=True)
+        try:
+            untranslated_df[col].replace(translations[col], inplace=True)
+        except KeyError:
+            print(f"{col} not translated.")
 
     # Rename header titles
     untranslated_df.rename(columns=translations["Header"], inplace=True)
@@ -279,4 +235,3 @@ def translate_spreadsheet_data(
             )
 
     return untranslated_df
-
