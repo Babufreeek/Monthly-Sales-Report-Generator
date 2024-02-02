@@ -244,7 +244,7 @@ class ExcelForm(QWidget):
         worksheet_to_add = self.worksheet_to_add_edit.text() if add_to_existing else None
 
         create_new_spreadsheet = self.create_new_spreadsheet_checkbox.isChecked()
-        new_filename = self.new_filename_edit.text() if create_new_spreadsheet else None
+        new_filename = self.new_filename_edit.text().strip() if create_new_spreadsheet else None
         output_location = self.output_location_edit.text() if create_new_spreadsheet else None
         new_worksheet_name = self.new_worksheet_edit.text() if create_new_spreadsheet else None
 
@@ -266,6 +266,10 @@ class ExcelForm(QWidget):
             return
 
         print("Processing files...")
+
+        # Add xlsx extension to new filename if not present
+        if not new_filename.endswith(".xlsx"):
+            new_filename += ".xlsx"
 
          # Use the values to calculate total sales
         total_sales(

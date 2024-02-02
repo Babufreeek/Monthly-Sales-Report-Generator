@@ -143,12 +143,12 @@ def total_sales(
         usage_amount,
     ) = [
         translations["Header"][var] 
-        for var in list(untranslated_values.values())[:-2]
+        for var in list(untranslated_values.values())[:-4]
         ]
 
     # Get english value names needed for values within columns
-    monthly = translations[untranslated_values["Billing Method"]][untranslated_values["Monthly"]]
-    delete_refund = translations[untranslated_values["Order Type"]][untranslated_values["Delete & Refund"]]
+    monthly = untranslated_values[untranslated_values["Monthly"]]
+    delete_refund = untranslated_values[untranslated_values["Delete"]]
 
     # Calculate hourly and postpaid sales
     output = hourly_and_postpaid_sales(sales_df)
