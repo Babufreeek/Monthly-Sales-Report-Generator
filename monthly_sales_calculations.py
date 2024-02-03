@@ -1,6 +1,8 @@
 import pandas as pd
 import openpyxl
 
+translated_col_and_values_sheet = "IMPT VARS - DO NOT DELETE"
+
 def total_sales(
     file_path, # File path of input
     sheet_name, # Worksheet to process
@@ -124,10 +126,7 @@ def total_sales(
     else:
         sales_df = pd.read_excel(file_path, sheet_name)
 
-    # Variables needed for calculations
-    untranslated_values = translations["IMPT VARS - DO NOT DELETE"]
-
-    # Get english name for the particular columns
+    # Get english translation for the particular column names and values required for our calculations
     (
         project_id,
         resource_id,
@@ -141,14 +140,12 @@ def total_sales(
         order_end_time,
         unit_price,
         usage_amount,
+        monthly,
+        delete_refund
     ) = [
-        translations["Header"][var] 
-        for var in list(untranslated_values.values())[:-4]
+        val
+        for val in translations[translated_col_and_values_sheet].values()
         ]
-
-    # Get english value names needed for values within columns
-    monthly = untranslated_values[untranslated_values["Monthly"]]
-    delete_refund = untranslated_values[untranslated_values["Delete"]]
 
     # Calculate hourly and postpaid sales
     output = hourly_and_postpaid_sales(sales_df)
@@ -215,7 +212,7 @@ def translate_spreadsheet_data(
     cols_to_translate = [
         worksheet 
         for worksheet in translations 
-        if worksheet not in ["IMPT VARS - DO NOT DELETE", "Header"]
+        if worksheet not in [translated_col_and_values_sheet, "Header"]
         ]
 
     for col in cols_to_translate:
