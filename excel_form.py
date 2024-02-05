@@ -265,11 +265,11 @@ class ExcelForm(QWidget):
             self.show_message("Missing Fields", "If 'Add to Existing Spreadsheet' is checked, 'Worksheet to Add' field cannot be blank.")
             return
 
-        print("Processing files...")
-
         # Add xlsx extension to new filename if not present
-        if not new_filename.endswith(".xlsx"):
+        if new_filename and not new_filename.endswith(".xlsx"):
             new_filename += ".xlsx"
+
+        print("Processing files...")
 
          # Use the values to calculate total sales
         total_sales(
