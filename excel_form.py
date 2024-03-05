@@ -37,20 +37,20 @@ class ExcelForm(QWidget):
         self.translation_source_button.clicked.connect(self.get_translation_source)
 
         #
-        self.already_translated_checkbox = QCheckBox('Worksheet Already Translated')
+        self.already_translated_checkbox = QCheckBox('Raw Data Already Translated?')
         self.already_translated_checkbox.stateChanged.connect(self.toggle_already_translated)
 
         # Option to save translated table as a new worksheet in the existing file
-        self.save_translations_checkbox = QCheckBox('Save Translation Output')
+        self.save_translations_checkbox = QCheckBox('Save Translation of Raw Data')
 
         # Option to just translate the worksheet without needing to process the data further
-        self.translate_only_checkbox = QCheckBox('Translate Worksheet Only')
+        self.translate_only_checkbox = QCheckBox('Translate Raw Data Only and Exit')
         self.translate_only_checkbox.stateChanged.connect(self.toggle_translate_only)
 
         self.output_method_label = QLabel('Select Output Method Below:')
 
         # Option to add the data into the existing spreadsheet
-        self.add_to_existing_checkbox = QCheckBox('Add as Existing Spreadsheet')
+        self.add_to_existing_checkbox = QCheckBox('Add to Existing Spreadsheet')
         self.add_to_existing_checkbox.stateChanged.connect(self.toggle_add_to_existing)
 
         # Name of new worksheet to be added
@@ -269,7 +269,7 @@ class ExcelForm(QWidget):
         if new_filename and not new_filename.endswith(".xlsx"):
             new_filename += ".xlsx"
 
-        print("Processing files...")
+        print("Generating Report...")
 
          # Use the values to calculate total sales
         total_sales(
@@ -286,7 +286,7 @@ class ExcelForm(QWidget):
             new_worksheet=new_worksheet_name,
         )
 
-        print("Finished processing!")
+        print("Report Generated!")
 
         # Show a message after processing files
         self.show_processed_message()
