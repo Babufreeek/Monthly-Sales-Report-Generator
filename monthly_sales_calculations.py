@@ -1,5 +1,6 @@
 import pandas as pd
 import openpyxl
+import os
 
 translated_col_and_values_sheet = "IMPT VARS - DO NOT DELETE"
 
@@ -224,11 +225,15 @@ def translate_spreadsheet_data(
     # Rename header titles
     untranslated_df.rename(columns=translations["Header"], inplace=True)
 
-    # If user specifies to output translations, add a new worksheet to the existing file
+    # If user specifies to output translations, create a new spreadsheet containing the translated raw data
     if output_translations:
-        with pd.ExcelWriter(file_path, engine="openpyxl", mode="a") as writer:
+        # Filepath to save translation output
+        new_file_path = os.path.join(os.path.dirname(file_path), sheet_name + "_english.xlsx")
+
+        # Write to excel
+        with pd.ExcelWriter(new_file_path, engine="openpyxl", mode="w") as writer:
             untranslated_df.to_excel(
-                writer, sheet_name=sheet_name + "_translated", index=False
+                writer, sheet_name="Sheet1", index=False
             )
 
     return untranslated_df
