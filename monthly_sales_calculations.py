@@ -228,7 +228,7 @@ def translate_spreadsheet_data(
     # If user specifies to output translations, create a new spreadsheet containing the translated raw data
     if output_translations:
         # Filepath to save translation output
-        new_file_path = os.path.join(os.path.dirname(file_path), sheet_name + "_english.xlsx")
+        new_file_path = os.path.join(os.path.dirname(file_path), "en_" + os.path.basename(file_path))
 
         # Write to excel
         with pd.ExcelWriter(new_file_path, engine="openpyxl", mode="w") as writer:
