@@ -82,9 +82,6 @@ def total_sales(
         # Convert 'Duration (Hours)' to numeric
         merged_df['Duration (Hours)'] = pd.to_numeric(merged_df['Duration (Hours)'], errors='coerce')
 
-        # Round off the result to 2 decimal places
-        merged_df['Duration (Hours)'] = merged_df['Duration (Hours)'].round(2)
-
         # Get usage amount by summing up the hourly charges for each Resource ID
         usage_total = (
             hourly_and_postpaid_df.groupby(resource_id)[usage_amount].sum().reset_index()
@@ -108,7 +105,10 @@ def total_sales(
         # Get average Unit Price by dividing Usage Amount by duration
         final_df[unit_price] = (
             final_df[usage_amount] / final_df["Duration (Hours)"]
-        ).round(2)
+        )
+
+        # Round off duration to 2 decimal places
+        final_df['Duration (Hours)'] = final_df['Duration (Hours)'].round(2)
 
         return final_df
     
