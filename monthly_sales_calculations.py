@@ -220,7 +220,7 @@ def translate_spreadsheet_data(
         try:
             untranslated_df[col].replace(translations[col], inplace=True)
         except KeyError:
-            print(f"Column {col} not found!")
+            print(f"Values in column {col} not translated!")
 
     # Rename header titles
     untranslated_df.rename(columns=translations["Header"], inplace=True)

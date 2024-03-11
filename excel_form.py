@@ -36,7 +36,7 @@ class ExcelForm(QWidget):
         self.translation_source_button = QPushButton('Browse')
         self.translation_source_button.clicked.connect(self.get_translation_source)
 
-        #
+        # Option to specify if raw data is already translated
         self.already_translated_checkbox = QCheckBox('Raw Data Already Translated?')
         self.already_translated_checkbox.stateChanged.connect(self.toggle_already_translated)
 
