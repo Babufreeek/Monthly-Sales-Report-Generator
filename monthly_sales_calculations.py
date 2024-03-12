@@ -218,7 +218,7 @@ def translate_spreadsheet_data(
 
     for col in cols_to_translate:
         try:
-            untranslated_df[col].replace(translations[col], inplace=True)
+            untranslated_df.replace({col: translations[col]}, inplace=True)
         except KeyError:
             print(f"Values in column {col} not translated!")
 
