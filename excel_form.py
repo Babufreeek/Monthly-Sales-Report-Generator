@@ -180,6 +180,9 @@ class ExcelForm(QWidget):
             # Load worksheets into the combo box
             self.load_worksheets(selected_file)
 
+            # Autofill output location field with path for folder of the selected file
+            self.output_location_edit.setText(os.path.dirname(selected_file))
+
     @classmethod
     def autofill_translation_source(cls):
         """
