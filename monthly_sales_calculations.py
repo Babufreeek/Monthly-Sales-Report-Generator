@@ -73,14 +73,11 @@ def total_sales(
 
         # Calculate duration in hours rounded off to 2 decimal places.
         # Convert string columns to datetime
-        merged_df[order_start_time] = pd.to_datetime(merged_df[order_start_time], format='%Y-%m-%d %H:%M:%S')
-        merged_df[order_end_time] = pd.to_datetime(merged_df[order_end_time], format='%Y-%m-%d %H:%M:%S')
+        merged_df[order_start_time] = pd.to_datetime(merged_df[order_start_time])
+        merged_df[order_end_time] = pd.to_datetime(merged_df[order_end_time])
 
         # Calculate the duration in hours
-        merged_df['Duration (Hours)'] = (merged_df[order_end_time] - merged_df[order_start_time]).astype('timedelta64[s]') / 3600
-
-        # Convert 'Duration (Hours)' to numeric
-        merged_df['Duration (Hours)'] = pd.to_numeric(merged_df['Duration (Hours)'], errors='coerce')
+        merged_df['Duration (Hours)'] = ((merged_df[order_end_time] - merged_df[order_start_time]).dt.total_seconds() / 3600)
 
         # Get usage amount by summing up the hourly charges for each Resource ID
         usage_total = (
