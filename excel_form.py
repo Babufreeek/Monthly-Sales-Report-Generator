@@ -158,6 +158,9 @@ class ExcelForm(QWidget):
             # Enable Create New Spreadsheet and Add to Existing Spreadsheet checkboxes
             self.add_to_existing_checkbox.setEnabled(True)
             self.create_new_spreadsheet_checkbox.setEnabled(True)
+
+            # Check Create New Spreadsheet checkbox
+            self.create_new_spreadsheet_checkbox.setChecked(True)
     
     def toggle_already_translated(self, state):
         if state == 2:  # Checked
