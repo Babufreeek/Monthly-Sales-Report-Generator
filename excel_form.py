@@ -3,7 +3,7 @@ import openpyxl
 import os
 from monthly_sales_calculations import total_sales
 import styles
-from helpers import *
+from helpers import LoadingScreen, FileProcessor
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QComboBox, QCheckBox, QMessageBox
 
 class ExcelForm(QWidget):
@@ -184,7 +184,7 @@ class ExcelForm(QWidget):
             selected_file = file_dialog.selectedFiles()[0]
             self.excel_file_edit.setText(selected_file)
 
-            # Processor for loading all worksheets
+            # Processor for loading worksheets into the combo box
             self.worksheet_processor = FileProcessor(self.load_worksheets, selected_file)
 
             # Show loading screen before starting processing and start processor
