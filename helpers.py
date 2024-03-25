@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QProgressBar
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 
-
 class LoadingScreen(QDialog):
     """
     Loading screen
