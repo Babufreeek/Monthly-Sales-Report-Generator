@@ -3,6 +3,7 @@ import openpyxl
 import os
 from monthly_sales_calculations import total_sales
 import styles
+from helpers import *
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QFileDialog, QVBoxLayout, QComboBox, QCheckBox, QMessageBox
 
 class ExcelForm(QWidget):
@@ -88,6 +89,9 @@ class ExcelForm(QWidget):
 
         # Set default value for Worksheet to Add
         self.worksheet_to_add_edit.setText('Monthly Sales Calculations')
+
+        # Loading screen
+        self.loading_screen = LoadingScreen()
 
         layout = QVBoxLayout()
         layout.addWidget(self.excel_file_label)
@@ -180,8 +184,15 @@ class ExcelForm(QWidget):
             selected_file = file_dialog.selectedFiles()[0]
             self.excel_file_edit.setText(selected_file)
 
-            # Load worksheets into the combo box
-            self.load_worksheets(selected_file)
+            # Processor for loading all worksheets
+            self.worksheet_processor = FileProcessor(self.load_worksheets, selected_file)
+
+            # Show loading screen before starting processing and start processor
+            self.loading_screen.show()
+            self.worksheet_processor.start()
+
+            # After processor is finished, close loading screen
+            self.worksheet_processor.finished.connect(self.loading_screen.close)
 
             # Autofill output location field with path for folder of the selected file
             self.output_location_edit.setText(os.path.dirname(selected_file))
@@ -277,25 +288,33 @@ class ExcelForm(QWidget):
 
         print("Generating Report...")
 
-         # Use the values to calculate total sales
-        total_sales(
-            file_path=excel_file,
-            sheet_name=worksheet_name,
-            translation_sheet=translation_source,
-            already_translated=already_translated,
-            output_translations=save_translations,
-            translate_only=translate_only,
-            add_to=add_to_existing,
-            worksheet_to_add=worksheet_to_add,
-            create_new_spreadsheet=create_new_spreadsheet,
-            new_filename=os.path.join(output_location, new_filename) if new_filename else "",
-            new_worksheet=new_worksheet_name,
+        # Save variables needed for running calculations
+        myvariables = (
+            excel_file,
+            worksheet_name,
+            translation_source,
+            already_translated,
+            save_translations,
+            translate_only,
+            add_to_existing,
+            worksheet_to_add,
+            create_new_spreadsheet,
+            os.path.join(output_location, new_filename) if new_filename else "",
+            new_worksheet_name,
         )
+        # Create processor for running code
+        self.report_processor = FileProcessor(total_sales, *myvariables)
 
-        print("Report Generated!")
+        # Show loading screen before starting processing
+        self.loading_screen.show()
+        # Start running total sales function
+        self.report_processor.start()
 
-        # Show a message after processing files
-        self.show_processed_message()
+        # Afterwards, close loading screen and show processed message
+        self.report_processor.finished.connect(self.loading_screen.close)
+        self.report_processor.finished.connect(self.show_processed_message)
+        self.report_processor.finished.connect(lambda: print("Report generated!"))
+
 
     def show_message(self, title, text):
         msg_box = QMessageBox()
