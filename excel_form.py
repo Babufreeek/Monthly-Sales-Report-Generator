@@ -45,7 +45,7 @@ class ExcelForm(QWidget):
         self.save_translations_checkbox = QCheckBox('Save Translation of Raw Data')
 
         # Option to just translate the worksheet without needing to process the data further
-        self.translate_only_checkbox = QCheckBox('Translate Raw Data Only and Exit')
+        self.translate_only_checkbox = QCheckBox('Translate Raw Data Only')
         self.translate_only_checkbox.stateChanged.connect(self.toggle_translate_only)
 
         self.output_method_label = QLabel('Select Output Method Below:')
