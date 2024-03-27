@@ -287,6 +287,9 @@ class ExcelForm(QWidget):
             new_filename += ".xlsx"
 
         print("Generating Report...")
+        
+        # Disable submit button temporarily
+        self.submit_button.setEnabled(False)
 
         # Save variables needed for running calculations
         myvariables = (
@@ -363,6 +366,9 @@ class ExcelForm(QWidget):
         self.new_filename_edit.setText('Result.xlsx')
         self.worksheet_to_add_edit.setText('Monthly Sales Calculation')
         self.new_worksheet_edit.setText('Sheet1')
+        
+        # Re-enable submit button
+        self.submit_button.setEnabled(True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
