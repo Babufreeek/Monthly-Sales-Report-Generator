@@ -196,15 +196,9 @@ class ExcelForm(QWidget):
 
             # After processor is finished, close loading screen
             self.worksheet_processor.finished.connect(self.loading_screen.close)
-            # Re-enable submit button after processor is finished
-            self.worksheet_processor.finished.connect(self.enable_submit_button)
 
             # Autofill output location field with path for folder of the selected file
             self.output_location_edit.setText(os.path.dirname(selected_file))
-
-    def enable_submit_button(self):
-        # Enable submit button when processing is finished
-        self.submit_button.setEnabled(True)
 
     @classmethod
     def autofill_translation_source(cls):
@@ -240,6 +234,9 @@ class ExcelForm(QWidget):
             print(f"Error loading worksheets: {e}")
 
         print("Worksheets loaded!")
+
+        # Re-enable submit button after processor is finished
+        self.submit_button.setEnabled(True)
 
     def toggle_add_to_existing(self, state):
         self.worksheet_to_add_edit.setEnabled(state == 2)  # 2 is checked, 0 is unchecked
