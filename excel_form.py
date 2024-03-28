@@ -187,15 +187,24 @@ class ExcelForm(QWidget):
             # Processor for loading worksheets into the combo box
             self.worksheet_processor = FileProcessor(self.load_worksheets, selected_file)
 
+            # Temporarily disable submit button
+            self.submit_button.setEnabled(False)
+
             # Show loading screen before starting processing and start processor
             self.loading_screen.show()
             self.worksheet_processor.start()
 
             # After processor is finished, close loading screen
             self.worksheet_processor.finished.connect(self.loading_screen.close)
+            # Re-enable submit button after processor is finished
+            self.worksheet_processor.finished.connect(self.enable_submit_button)
 
             # Autofill output location field with path for folder of the selected file
             self.output_location_edit.setText(os.path.dirname(selected_file))
+
+    def enable_submit_button(self):
+        # Enable submit button when processing is finished
+        self.submit_button.setEnabled(True)
 
     @classmethod
     def autofill_translation_source(cls):
