@@ -48,5 +48,5 @@
 - `helpers.py` contains additional classes for the loading pop-up and File processor for running slower processes/
 
 # Testing
-- If you would like to test out this .exe, please contact me at [wjch3w@gmail.com](mailto:wjch3w@gmail.com?subject=[GitHub]%20Monthly%20Sales%20Report%20Generator)!
+- If you would like to test out this program with sample data, please contact me at [wjch3w@gmail.com](mailto:wjch3w@gmail.com?subject=[GitHub]%20Monthly%20Sales%20Report%20Generator)!
  
