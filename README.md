@@ -48,6 +48,5 @@
 - `helpers.py` contains additional classes for the loading pop-up and File processor for running slower processes/
 
 # Testing
-- 2 files containing raw data for Nov and Dec 2023 respectively are included for testing purposes.
-- Follow the usage instructions above and select either file in Step 3 to test the program’s functionality.
+- If you would like to test out this .exe, please contact me at [wjch3w@gmail.com](mailto:wjch3w@gmail.com)!
  
